@@ -91,11 +91,11 @@ static ADFullScreenDetailView *sharedDetailView;
             id object = [self.info objectAtIndex:_selectedIndex];
             if ([object isKindOfClass:[NSDictionary class]]) {
                 NSDictionary *dictionary = (NSDictionary *)object;
-                if ([dictionary objectForKey:@"title"]) {
-                    self.currentTitle = [dictionary objectForKey:@"title"];
+                if ([dictionary objectForKey:AD_TITLE_KEY]) {
+                    self.currentTitle = [dictionary objectForKey:AD_TITLE_KEY];
                 }
-                if ([dictionary objectForKey:@"text"]) {
-                    self.currentText = [dictionary objectForKey:@"text"];
+                if ([dictionary objectForKey:AD_DETAILS_KEY]) {
+                    self.currentText = [dictionary objectForKey:AD_DETAILS_KEY];
                 }
             }
         }
@@ -133,7 +133,7 @@ static ADFullScreenDetailView *sharedDetailView;
 {
     CGFloat height = [self titleLabelHeight]+[self textLabelHeight]+44.0;
     self.mainView = [[UIView alloc] initWithFrame:CGRectMake(0.0, -height, self.window.frame.size.width, height)];
-    self.mainView.backgroundColor = [UIColor colorC50];
+    self.mainView.backgroundColor = [UIColor whiteColor];
     
     [self setupTitleView];
     [self setupTextView];
@@ -150,7 +150,7 @@ static ADFullScreenDetailView *sharedDetailView;
         self.titleBorderLayer = [CALayer layer];
     }
     self.titleBorderLayer.frame = CGRectMake(0.0f, self.titleView.bounds.size.height-1.0, self.titleView.bounds.size.width, 0.5f);
-    self.titleBorderLayer.backgroundColor = [UIColor colorC40].CGColor;
+    self.titleBorderLayer.backgroundColor = [UIColor grayColor].CGColor;
     [self.titleView.layer addSublayer:self.titleBorderLayer];
 
     
@@ -160,7 +160,7 @@ static ADFullScreenDetailView *sharedDetailView;
     self.titleLabel = [[UILabel alloc] initWithFrame:titleFrame];
     self.titleLabel.backgroundColor = [UIColor clearColor];
     self.titleLabel.font = [UIFont fontWithName:@"Helvetica" size:16.0];
-    self.titleLabel.textColor = [UIColor colorC43];
+    self.titleLabel.textColor = [UIColor darkGrayColor];
     self.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
     self.titleLabel.numberOfLines = 0;
     self.titleLabel.text = self.currentTitle;
@@ -172,7 +172,8 @@ static ADFullScreenDetailView *sharedDetailView;
     closeButton.frame = buttonFrame;
     closeButton.tag = 9;
     [closeButton setTitle:@"Close" forState:UIControlStateNormal];
-    [closeButton setTintColor:[UIColor colorC30]];
+    [closeButton setTintColor:[UIColor colorWithRed:0.0 green:190.0/255.0 blue:236.0/255.0 alpha:1.0]];
+;
     
     [self.titleView addSubview:self.titleLabel];
     [self.titleView addSubview:closeButton];
@@ -185,7 +186,7 @@ static ADFullScreenDetailView *sharedDetailView;
     
     self.textLabel = [[UILabel alloc] initWithFrame:textFrame];
     self.textLabel.font = [UIFont fontWithName:@"Helvetica" size:15.0];
-    self.textLabel.textColor = [UIColor colorC43];
+    self.textLabel.textColor = [UIColor darkGrayColor];
     self.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
     self.textLabel.numberOfLines = 0;
     self.textLabel.backgroundColor = [UIColor clearColor];
@@ -195,7 +196,7 @@ static ADFullScreenDetailView *sharedDetailView;
         self.textBorderLayer = [CALayer layer];
     }
     self.textBorderLayer.frame = CGRectMake(0.0f, self.textLabel.bounds.size.height-1.0, self.window.bounds.size.width, 0.5f);
-    self.textBorderLayer.backgroundColor = [UIColor colorC40].CGColor;
+    self.textBorderLayer.backgroundColor = [UIColor grayColor].CGColor;
     [self.textLabel.layer addSublayer:self.textBorderLayer];
     
     [self.mainView addSubview:self.textLabel];
@@ -210,8 +211,8 @@ static ADFullScreenDetailView *sharedDetailView;
     
     self.previousButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [self.previousButton setTitle:@"Previous" forState:UIControlStateNormal];
-    [self.previousButton setTitleColor:[UIColor colorC21] forState:UIControlStateNormal];
-    [self.previousButton setTitleColor:[UIColor colorC40] forState:UIControlStateDisabled];
+    [self.previousButton setTitleColor:[UIColor colorWithRed:88.0/255.0 green:167.0/255.0 blue:0.0 alpha:1.0] forState:UIControlStateNormal];
+    [self.previousButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
     CGRect backButtonFrame = CGRectMake(5.0, 5.0, 75.0, 34.0);
     self.previousButton.frame = backButtonFrame;
     [self.previousButton addTarget:self action:@selector(previousButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -220,8 +221,8 @@ static ADFullScreenDetailView *sharedDetailView;
     
     self.nextButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [self.nextButton setTitle:@"Next" forState:UIControlStateNormal];
-    [self.nextButton setTitleColor:[UIColor colorC21] forState:UIControlStateNormal];
-    [self.nextButton setTitleColor:[UIColor colorC40] forState:UIControlStateDisabled];
+    [self.nextButton setTitleColor:[UIColor colorWithRed:88.0/255.0 green:167.0/255.0 blue:0.0 alpha:1.0] forState:UIControlStateNormal];
+    [self.nextButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
     CGRect nextButtonFrame = CGRectMake(self.buttonView.bounds.size.width-45.0, 5.0, 40.0, 34.0);
     self.nextButton.frame = nextButtonFrame;
     [self.nextButton addTarget:self action:@selector(nextButtonClicked:) forControlEvents:UIControlEventTouchUpInside];

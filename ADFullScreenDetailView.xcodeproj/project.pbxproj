@@ -20,6 +20,8 @@
 		139FDE0A1885CD5900AB73C8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 139FDE081885CD5900AB73C8 /* InfoPlist.strings */; };
 		139FDE0C1885CD5900AB73C8 /* ADFullScreenDetailViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 139FDE0B1885CD5900AB73C8 /* ADFullScreenDetailViewTests.m */; };
 		139FDE181885CD7700AB73C8 /* ADFullScreenDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 139FDE171885CD7700AB73C8 /* ADFullScreenDetailView.m */; };
+		139FDE1C1885E1B300AB73C8 /* ADTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 139FDE1A1885E1B300AB73C8 /* ADTableViewController.m */; };
+		139FDE1D1885E1B300AB73C8 /* ADTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 139FDE1B1885E1B300AB73C8 /* ADTableViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +53,9 @@
 		139FDE0B1885CD5900AB73C8 /* ADFullScreenDetailViewTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADFullScreenDetailViewTests.m; sourceTree = "<group>"; };
 		139FDE161885CD7700AB73C8 /* ADFullScreenDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADFullScreenDetailView.h; sourceTree = "<group>"; };
 		139FDE171885CD7700AB73C8 /* ADFullScreenDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADFullScreenDetailView.m; sourceTree = "<group>"; };
+		139FDE191885E1B300AB73C8 /* ADTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADTableViewController.h; sourceTree = "<group>"; };
+		139FDE1A1885E1B300AB73C8 /* ADTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADTableViewController.m; sourceTree = "<group>"; };
+		139FDE1B1885E1B300AB73C8 /* ADTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ADTableViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +120,9 @@
 				139FDDF61885CD5900AB73C8 /* ADAppDelegate.m */,
 				139FDDF81885CD5900AB73C8 /* Images.xcassets */,
 				139FDDED1885CD5900AB73C8 /* Supporting Files */,
+				139FDE191885E1B300AB73C8 /* ADTableViewController.h */,
+				139FDE1A1885E1B300AB73C8 /* ADTableViewController.m */,
+				139FDE1B1885E1B300AB73C8 /* ADTableViewController.xib */,
 			);
 			name = ADFullScreenDetailViewDemo;
 			path = ADFullScreenDetailView;
@@ -236,6 +244,7 @@
 			files = (
 				139FDDF11885CD5900AB73C8 /* InfoPlist.strings in Resources */,
 				139FDDF91885CD5900AB73C8 /* Images.xcassets in Resources */,
+				139FDE1D1885E1B300AB73C8 /* ADTableViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,6 +265,7 @@
 			files = (
 				139FDDF31885CD5900AB73C8 /* main.m in Sources */,
 				139FDDF71885CD5900AB73C8 /* ADAppDelegate.m in Sources */,
+				139FDE1C1885E1B300AB73C8 /* ADTableViewController.m in Sources */,
 				139FDE181885CD7700AB73C8 /* ADFullScreenDetailView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

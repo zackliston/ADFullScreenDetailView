@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+#define AD_TITLE_KEY @"title_key"
+#define AD_DETAILS_KEY @"details_key"
+
 @interface ADFullScreenDetailView : NSObject
 
 @property (nonatomic, strong) NSArray *info;

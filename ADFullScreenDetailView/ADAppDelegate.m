@@ -7,7 +7,7 @@
 //
 
 #import "ADAppDelegate.h"
-
+#import "ADTableViewController.h"
 @implementation ADAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -16,6 +16,12 @@
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
+    
+    ADTableViewController *tableVC = [[ADTableViewController alloc] init];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:tableVC];
+    navController.navigationItem.title = @"Full Screen Detail View";
+    
+    self.window.rootViewController = navController;
     return YES;
 }
 
