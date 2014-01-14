@@ -19,6 +19,7 @@
 		139FDE021885CD5900AB73C8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDDEA1885CD5900AB73C8 /* UIKit.framework */; };
 		139FDE0A1885CD5900AB73C8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 139FDE081885CD5900AB73C8 /* InfoPlist.strings */; };
 		139FDE0C1885CD5900AB73C8 /* ADFullScreenDetailViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 139FDE0B1885CD5900AB73C8 /* ADFullScreenDetailViewTests.m */; };
+		139FDE181885CD7700AB73C8 /* ADFullScreenDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 139FDE171885CD7700AB73C8 /* ADFullScreenDetailView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,8 @@
 		139FDE071885CD5900AB73C8 /* ADFullScreenDetailViewTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ADFullScreenDetailViewTests-Info.plist"; sourceTree = "<group>"; };
 		139FDE091885CD5900AB73C8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		139FDE0B1885CD5900AB73C8 /* ADFullScreenDetailViewTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADFullScreenDetailViewTests.m; sourceTree = "<group>"; };
+		139FDE161885CD7700AB73C8 /* ADFullScreenDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADFullScreenDetailView.h; sourceTree = "<group>"; };
+		139FDE171885CD7700AB73C8 /* ADFullScreenDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADFullScreenDetailView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,7 +80,8 @@
 		139FDDDA1885CD5900AB73C8 = {
 			isa = PBXGroup;
 			children = (
-				139FDDEC1885CD5900AB73C8 /* ADFullScreenDetailView */,
+				139FDE151885CD6900AB73C8 /* ADFullScreenDetailView */,
+				139FDDEC1885CD5900AB73C8 /* ADFullScreenDetailViewDemo */,
 				139FDE051885CD5900AB73C8 /* ADFullScreenDetailViewTests */,
 				139FDDE51885CD5900AB73C8 /* Frameworks */,
 				139FDDE41885CD5900AB73C8 /* Products */,
@@ -104,7 +108,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		139FDDEC1885CD5900AB73C8 /* ADFullScreenDetailView */ = {
+		139FDDEC1885CD5900AB73C8 /* ADFullScreenDetailViewDemo */ = {
 			isa = PBXGroup;
 			children = (
 				139FDDF51885CD5900AB73C8 /* ADAppDelegate.h */,
@@ -112,6 +116,7 @@
 				139FDDF81885CD5900AB73C8 /* Images.xcassets */,
 				139FDDED1885CD5900AB73C8 /* Supporting Files */,
 			);
+			name = ADFullScreenDetailViewDemo;
 			path = ADFullScreenDetailView;
 			sourceTree = "<group>";
 		};
@@ -142,6 +147,15 @@
 				139FDE081885CD5900AB73C8 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		139FDE151885CD6900AB73C8 /* ADFullScreenDetailView */ = {
+			isa = PBXGroup;
+			children = (
+				139FDE161885CD7700AB73C8 /* ADFullScreenDetailView.h */,
+				139FDE171885CD7700AB73C8 /* ADFullScreenDetailView.m */,
+			);
+			name = ADFullScreenDetailView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -242,6 +256,7 @@
 			files = (
 				139FDDF31885CD5900AB73C8 /* main.m in Sources */,
 				139FDDF71885CD5900AB73C8 /* ADAppDelegate.m in Sources */,
+				139FDE181885CD7700AB73C8 /* ADFullScreenDetailView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
