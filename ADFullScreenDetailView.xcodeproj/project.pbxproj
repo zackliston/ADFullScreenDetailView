@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		139DB28818870EF1006BCC2F /* ADFullScreenDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 139DB28718870EF1006BCC2F /* ADFullScreenDetailView.m */; };
 		139FDDE71885CD5900AB73C8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDDE61885CD5900AB73C8 /* Foundation.framework */; };
 		139FDDE91885CD5900AB73C8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDDE81885CD5900AB73C8 /* CoreGraphics.framework */; };
 		139FDDEB1885CD5900AB73C8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDDEA1885CD5900AB73C8 /* UIKit.framework */; };
@@ -19,7 +20,6 @@
 		139FDE021885CD5900AB73C8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDDEA1885CD5900AB73C8 /* UIKit.framework */; };
 		139FDE0A1885CD5900AB73C8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 139FDE081885CD5900AB73C8 /* InfoPlist.strings */; };
 		139FDE0C1885CD5900AB73C8 /* ADFullScreenDetailViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 139FDE0B1885CD5900AB73C8 /* ADFullScreenDetailViewTests.m */; };
-		139FDE181885CD7700AB73C8 /* ADFullScreenDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 139FDE171885CD7700AB73C8 /* ADFullScreenDetailView.m */; };
 		139FDE1C1885E1B300AB73C8 /* ADTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 139FDE1A1885E1B300AB73C8 /* ADTableViewController.m */; };
 		139FDE1D1885E1B300AB73C8 /* ADTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 139FDE1B1885E1B300AB73C8 /* ADTableViewController.xib */; };
 /* End PBXBuildFile section */
@@ -35,6 +35,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		139DB28618870EF1006BCC2F /* ADFullScreenDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ADFullScreenDetailView.h; path = ADFullScreenDetailView/ADFullScreenDetailView.h; sourceTree = "<group>"; };
+		139DB28718870EF1006BCC2F /* ADFullScreenDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ADFullScreenDetailView.m; path = ADFullScreenDetailView/ADFullScreenDetailView.m; sourceTree = "<group>"; };
 		139FDDE31885CD5900AB73C8 /* ADFullScreenDetailView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ADFullScreenDetailView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		139FDDE61885CD5900AB73C8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		139FDDE81885CD5900AB73C8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -51,8 +53,6 @@
 		139FDE071885CD5900AB73C8 /* ADFullScreenDetailViewTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ADFullScreenDetailViewTests-Info.plist"; sourceTree = "<group>"; };
 		139FDE091885CD5900AB73C8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		139FDE0B1885CD5900AB73C8 /* ADFullScreenDetailViewTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADFullScreenDetailViewTests.m; sourceTree = "<group>"; };
-		139FDE161885CD7700AB73C8 /* ADFullScreenDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADFullScreenDetailView.h; sourceTree = "<group>"; };
-		139FDE171885CD7700AB73C8 /* ADFullScreenDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADFullScreenDetailView.m; sourceTree = "<group>"; };
 		139FDE191885E1B300AB73C8 /* ADTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADTableViewController.h; sourceTree = "<group>"; };
 		139FDE1A1885E1B300AB73C8 /* ADTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADTableViewController.m; sourceTree = "<group>"; };
 		139FDE1B1885E1B300AB73C8 /* ADTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ADTableViewController.xib; sourceTree = "<group>"; };
@@ -160,8 +160,8 @@
 		139FDE151885CD6900AB73C8 /* ADFullScreenDetailView */ = {
 			isa = PBXGroup;
 			children = (
-				139FDE161885CD7700AB73C8 /* ADFullScreenDetailView.h */,
-				139FDE171885CD7700AB73C8 /* ADFullScreenDetailView.m */,
+				139DB28618870EF1006BCC2F /* ADFullScreenDetailView.h */,
+				139DB28718870EF1006BCC2F /* ADFullScreenDetailView.m */,
 			);
 			name = ADFullScreenDetailView;
 			sourceTree = "<group>";
@@ -264,9 +264,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				139FDDF31885CD5900AB73C8 /* main.m in Sources */,
+				139DB28818870EF1006BCC2F /* ADFullScreenDetailView.m in Sources */,
 				139FDDF71885CD5900AB73C8 /* ADAppDelegate.m in Sources */,
 				139FDE1C1885E1B300AB73C8 /* ADTableViewController.m in Sources */,
-				139FDE181885CD7700AB73C8 /* ADFullScreenDetailView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -467,6 +467,7 @@
 				139FDE111885CD5900AB73C8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		139FDE121885CD5900AB73C8 /* Build configuration list for PBXNativeTarget "ADFullScreenDetailViewTests" */ = {
 			isa = XCConfigurationList;
@@ -475,6 +476,7 @@
 				139FDE141885CD5900AB73C8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
