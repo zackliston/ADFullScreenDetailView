@@ -18,7 +18,7 @@
 @property (nonatomic, strong) UIView *mainView;
 @property (nonatomic, strong) UIView *titleView;
 @property (nonatomic, strong) UILabel *titleLabel;
-@property (nonatomic, strong) UILabel *textLabel;
+@property (nonatomic, strong) UITextView *detailsView;
 @property (nonatomic, strong) UIView *buttonView;
 
 @property (nonatomic, strong) UIButton *previousButton;
@@ -32,6 +32,8 @@
 
 @property (nonatomic, assign) NSUInteger selectedIndex;
 @property (nonatomic, assign) BOOL isActive;
+
+@property (nonatomic, assign) BOOL canScroll;
 @end
 
 @implementation ADFullScreenDetailView
@@ -42,8 +44,10 @@
 @synthesize mainView = _mainView;
 @synthesize titleView = _titleView;
 @synthesize titleLabel = _titleLabel;
-@synthesize textLabel = _textLabel;
+@synthesize detailsView = _detailsView;
 @synthesize buttonView = _buttonView;
+
+@synthesize canScroll = _canScroll;
 
 @synthesize previousButton = _previousButton;
 @synthesize nextButton = _nextButton;
@@ -116,7 +120,7 @@ static ADFullScreenDetailView *sharedDetailView;
 {
     if (_detailsFont != detailsFont) {
         _detailsFont = detailsFont;
-        self.textLabel.font = _detailsFont;
+        self.detailsView.font = _detailsFont;
     }
 }
 
@@ -148,7 +152,7 @@ static ADFullScreenDetailView *sharedDetailView;
 {
     if (_detailsTextColor != detailsTextColor) {
         _detailsTextColor = detailsTextColor;
-        self.textLabel.textColor = _detailsTextColor;
+        self.detailsView.textColor = _detailsTextColor;
     }
 }
 
@@ -187,6 +191,19 @@ static ADFullScreenDetailView *sharedDetailView;
         }
         self.previousButton.enabled = (_selectedIndex > 0) ? YES : NO;
         self.nextButton.enabled = (_selectedIndex < self.info.count-1) ? YES : NO;
+    }
+}
+
+- (void)setCanScroll:(BOOL)canScroll
+{
+    if (_canScroll != canScroll) {
+        _canScroll = canScroll;
+        
+        if (_canScroll) {
+            self.detailsView.showsVerticalScrollIndicator = YES;
+        } else {
+            self.detailsView.showsVerticalScrollIndicator = NO;
+        }
     }
 }
 
@@ -270,22 +287,17 @@ static ADFullScreenDetailView *sharedDetailView;
 {
     CGRect textFrame = CGRectMake(10.0, [self titleLabelHeight], self.window.bounds.size.width-20.0, [self textLabelHeight]);
     
-    self.textLabel = [[UILabel alloc] initWithFrame:textFrame];
-    self.textLabel.font = self.detailsFont;
-    self.textLabel.textColor = self.detailsTextColor;
-    self.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    self.textLabel.numberOfLines = 0;
-    self.textLabel.backgroundColor = [UIColor clearColor];
-    self.textLabel.text = self.currentText;
+    self.detailsView = [[UITextView alloc] initWithFrame:textFrame];
+    self.detailsView.font = self.detailsFont;
+    self.detailsView.textColor = self.detailsTextColor;
+    self.detailsView.backgroundColor = [UIColor clearColor];
+    self.detailsView.text = self.currentText;
+    self.detailsView.editable = NO;
+    self.detailsView.showsVerticalScrollIndicator = NO;
+    self.detailsView.showsHorizontalScrollIndicator = NO;
+    self.detailsView.scrollEnabled = YES;
     
-    if (!self.textBorderLayer) {
-        self.textBorderLayer = [CALayer layer];
-    }
-    self.textBorderLayer.frame = CGRectMake(0.0f, self.textLabel.bounds.size.height-1.0, self.window.bounds.size.width, 0.5f);
-    self.textBorderLayer.backgroundColor = [UIColor grayColor].CGColor;
-    [self.textLabel.layer addSublayer:self.textBorderLayer];
-    
-    [self.mainView addSubview:self.textLabel];
+    [self.mainView addSubview:self.detailsView];
 }
 
 - (void)setupButtonView
@@ -314,6 +326,13 @@ static ADFullScreenDetailView *sharedDetailView;
     [self.nextButton addTarget:self action:@selector(nextButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.buttonView addSubview:self.nextButton];
+    
+    if (!self.textBorderLayer) {
+        self.textBorderLayer = [CALayer layer];
+    }
+    self.textBorderLayer.frame = CGRectMake(0.0f, 1.0f, self.window.bounds.size.width, 0.5f);
+    self.textBorderLayer.backgroundColor = [UIColor grayColor].CGColor;
+    [self.buttonView.layer addSublayer:self.textBorderLayer];
     
     [self.mainView addSubview:self.buttonView];
 }
@@ -368,17 +387,37 @@ static ADFullScreenDetailView *sharedDetailView;
 {
     CGSize maxSize = CGSizeMake(self.window.bounds.size.width-20.0, MAXFLOAT);
     CGSize labelSize = [self.currentText sizeWithFont:[UIFont fontWithName:@"Helvetica" size:15.0] constrainedToSize:maxSize lineBreakMode:NSLineBreakByWordWrapping];
+    
+    if (labelSize.height+20.0 > [self maxDetailsHeight]) {
+        return [self maxDetailsHeight];
+    }
+    
     return labelSize.height + 20.0;
+}
+
+- (CGFloat)buttonViewHeight
+{
+    return 44.0;
+}
+
+- (CGFloat)maxDetailsHeight
+{
+    CGFloat maxHeight = self.window.frame.size.height;
+    maxHeight -= [self titleLabelHeight];
+    maxHeight -= [self buttonViewHeight];
+    maxHeight -= 20.0;
+    
+    return maxHeight;
 }
 
 - (void)layoutViews
 {
     [UIView animateWithDuration:ANIMATION_TIME animations:^{
         self.titleLabel.text = self.currentTitle;
-        self.textLabel.text = self.currentText;
+        self.detailsView.text = self.currentText;
         
         
-        CGFloat height = [self titleLabelHeight]+[self textLabelHeight]+44.0;
+        CGFloat height = [self titleLabelHeight]+[self textLabelHeight]+[self buttonViewHeight];
         
         if (self.isActive) {
             self.mainView.frame = CGRectMake(0.0, [UIApplication sharedApplication].statusBarFrame.size.height, self.window.frame.size.width, height);
@@ -399,11 +438,17 @@ static ADFullScreenDetailView *sharedDetailView;
         }
         
         self.titleBorderLayer.frame = CGRectMake(0.0f, self.titleView.bounds.size.height-1.0, self.titleView.bounds.size.width, 0.5f);
+        self.detailsView.frame = CGRectMake(10.0, [self titleLabelHeight], self.window.bounds.size.width-20.0, [self textLabelHeight]);
         
-        self.textLabel.frame = CGRectMake(10.0, [self titleLabelHeight], self.window.bounds.size.width-20.0, [self textLabelHeight]);
-        self.textBorderLayer.frame = CGRectMake(0.0f, self.textLabel.bounds.size.height-1.0, self.window.bounds.size.width, 0.5f);
+        self.textBorderLayer.frame = CGRectMake(0.0f, 1.0, self.window.bounds.size.width, 0.5f);
         
-        self.buttonView.frame = CGRectMake(0.0, [self titleLabelHeight]+[self textLabelHeight], self.window.bounds.size.width, 44.0);
+        self.buttonView.frame = CGRectMake(0.0, [self titleLabelHeight]+[self textLabelHeight], self.window.bounds.size.width, [self buttonViewHeight]);
+    } completion:^(BOOL finished) {
+        if ([self textLabelHeight] == [self maxDetailsHeight]) {
+            self.canScroll = YES;
+        } else {
+            self.canScroll = NO;
+        }
     }];
 }
 
