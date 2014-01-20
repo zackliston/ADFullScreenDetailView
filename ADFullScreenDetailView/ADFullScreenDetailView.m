@@ -473,7 +473,12 @@ static ADFullScreenDetailView *sharedDetailView;
 
 - (void)dimmedViewTapped:(UITapGestureRecognizer *)tap
 {
-    [self remove];
+    CGPoint pointInView = [tap locationInView:self.rootView];
+    CGFloat height = [self titleLabelHeight]+[self textLabelHeight]+[self buttonViewHeight]+20.0;
+    
+    if (pointInView.y >= height) {
+        [self remove];
+    }
 }
 
 @end
