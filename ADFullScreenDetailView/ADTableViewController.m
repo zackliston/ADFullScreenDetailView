@@ -37,7 +37,6 @@
 {
     [super viewDidLoad];
     self.detailView = [[ADFullScreenDetailView alloc] init];
-    self.detailView.hasNavigationButtons = NO;
     self.detailView.info = [self createDictionaryForFullScreenDetailView];
     
 }
