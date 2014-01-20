@@ -48,6 +48,7 @@
 @synthesize buttonView = _buttonView;
 
 @synthesize canScroll = _canScroll;
+@synthesize hasNavigationButtons = _hasNavigationButtons;
 
 @synthesize previousButton = _previousButton;
 @synthesize nextButton = _nextButton;
@@ -207,6 +208,13 @@ static ADFullScreenDetailView *sharedDetailView;
     }
 }
 
+- (void)setHasNavigationButtons:(BOOL)hasNavigationButtons
+{
+    if (_hasNavigationButtons != hasNavigationButtons) {
+        _hasNavigationButtons = hasNavigationButtons;
+    }
+}
+
 #pragma mark Initialization
 
 - (id)init
@@ -214,6 +222,7 @@ static ADFullScreenDetailView *sharedDetailView;
     self = [super init];
     if (self) {
         self.isActive = NO;
+        self.hasNavigationButtons = YES;
         self.window = [[UIApplication sharedApplication] keyWindow];
         [self setupRootView];
     }
@@ -234,7 +243,8 @@ static ADFullScreenDetailView *sharedDetailView;
 
 - (void)setupMainView
 {
-    CGFloat height = [self titleLabelHeight]+[self textLabelHeight]+44.0;
+    CGFloat height = [self titleLabelHeight]+[self textLabelHeight]+[self buttonViewHeight];
+    
     self.mainView = [[UIView alloc] initWithFrame:CGRectMake(0.0, -height, self.window.frame.size.width, height)];
     self.mainView.backgroundColor = self.backgroundColor;
     
@@ -417,7 +427,11 @@ static ADFullScreenDetailView *sharedDetailView;
         self.detailsView.text = self.currentText;
         
         
-        CGFloat height = [self titleLabelHeight]+[self textLabelHeight]+[self buttonViewHeight];
+        CGFloat height = [self titleLabelHeight]+[self textLabelHeight];
+        
+        if (self.hasNavigationButtons) {
+            height += [self buttonViewHeight];
+        }
         
         if (self.isActive) {
             self.mainView.frame = CGRectMake(0.0, [UIApplication sharedApplication].statusBarFrame.size.height, self.window.frame.size.width, height);
@@ -449,6 +463,8 @@ static ADFullScreenDetailView *sharedDetailView;
         } else {
             self.canScroll = NO;
         }
+        
+        self.buttonView.hidden = !self.hasNavigationButtons;
     }];
 }
 

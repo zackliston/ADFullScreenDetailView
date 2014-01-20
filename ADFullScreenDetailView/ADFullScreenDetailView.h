@@ -19,6 +19,7 @@
 @property (nonatomic, strong) UIFont *detailsFont;
 @property (nonatomic, strong) UIColor *titleTextColor;
 @property (nonatomic, strong) UIColor *detailsTextColor;
+@property (nonatomic, assign) BOOL hasNavigationButtons;
 
 + (ADFullScreenDetailView *)sharedInstance;
 - (void)showIndex:(NSUInteger)index;
