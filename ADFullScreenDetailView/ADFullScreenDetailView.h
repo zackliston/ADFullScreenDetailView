@@ -14,6 +14,11 @@
 @interface ADFullScreenDetailView : NSObject
 
 @property (nonatomic, strong) NSArray *info;
+@property (nonatomic, strong) UIColor *backgroundColor;
+@property (nonatomic, strong) UIFont *titleFont;
+@property (nonatomic, strong) UIFont *detailsFont;
+@property (nonatomic, strong) UIColor *titleTextColor;
+@property (nonatomic, strong) UIColor *detailsTextColor;
 
 + (ADFullScreenDetailView *)sharedInstance;
 - (void)showIndex:(NSUInteger)index;

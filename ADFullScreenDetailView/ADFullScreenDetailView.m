@@ -54,6 +54,12 @@
 
 @synthesize selectedIndex = _selectedIndex;
 
+@synthesize backgroundColor = _backgroundColor;
+@synthesize titleFont = _titleFont;
+@synthesize detailsFont = _detailsFont;
+@synthesize titleTextColor = _titleTextColor;
+@synthesize detailsTextColor = _detailsTextColor;
+
 static ADFullScreenDetailView *sharedDetailView;
 
 #pragma mark Getters and Setters
@@ -64,6 +70,86 @@ static ADFullScreenDetailView *sharedDetailView;
         sharedDetailView = [[ADFullScreenDetailView alloc] init];
     }
     return sharedDetailView;
+}
+
+- (UIColor *)backgroundColor
+{
+    if (!_backgroundColor) {
+        _backgroundColor = [UIColor whiteColor];
+    }
+    return _backgroundColor;
+}
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor
+{
+    if (_backgroundColor != backgroundColor) {
+        _backgroundColor = backgroundColor;
+        self.mainView.backgroundColor = backgroundColor;
+    }
+}
+
+- (UIFont *)titleFont
+{
+    if (!_titleFont) {
+        _titleFont = [UIFont fontWithName:@"Helvetica" size:16.0];
+    }
+    return _titleFont;
+}
+
+- (void)setTitleFont:(UIFont *)titleFont
+{
+    if (_titleFont != titleFont) {
+        _titleFont = titleFont;
+        self.titleLabel.font = titleFont;
+    }
+}
+
+- (UIFont *)detailsFont
+{
+    if (!_detailsFont) {
+        _detailsFont = [UIFont fontWithName:@"Helvetica" size:15.0];
+    }
+    return _detailsFont;
+}
+
+- (void)setDetailsFont:(UIFont *)detailsFont
+{
+    if (_detailsFont != detailsFont) {
+        _detailsFont = detailsFont;
+        self.textLabel.font = _detailsFont;
+    }
+}
+
+- (UIColor *)titleTextColor
+{
+    if (!_titleTextColor) {
+        _titleTextColor = [UIColor darkTextColor];
+    }
+    return _titleTextColor;
+}
+
+- (void)setTitleTextColor:(UIColor *)titleTextColor
+{
+    if (_titleTextColor != titleTextColor) {
+        _titleTextColor = titleTextColor;
+        self.titleLabel.textColor = _titleTextColor;
+    }
+}
+
+- (UIColor *)detailsTextColor
+{
+    if (!_detailsTextColor) {
+        _detailsTextColor = [UIColor darkTextColor];
+    }
+    return _detailsTextColor;
+}
+
+- (void)setDetailsTextColor:(UIColor *)detailsTextColor
+{
+    if (_detailsTextColor != detailsTextColor) {
+        _detailsTextColor = detailsTextColor;
+        self.textLabel.textColor = _detailsTextColor;
+    }
 }
 
 - (NSString *)currentTitle
@@ -133,7 +219,7 @@ static ADFullScreenDetailView *sharedDetailView;
 {
     CGFloat height = [self titleLabelHeight]+[self textLabelHeight]+44.0;
     self.mainView = [[UIView alloc] initWithFrame:CGRectMake(0.0, -height, self.window.frame.size.width, height)];
-    self.mainView.backgroundColor = [UIColor whiteColor];
+    self.mainView.backgroundColor = self.backgroundColor;
     
     [self setupTitleView];
     [self setupTextView];
@@ -159,8 +245,8 @@ static ADFullScreenDetailView *sharedDetailView;
     
     self.titleLabel = [[UILabel alloc] initWithFrame:titleFrame];
     self.titleLabel.backgroundColor = [UIColor clearColor];
-    self.titleLabel.font = [UIFont fontWithName:@"Helvetica" size:16.0];
-    self.titleLabel.textColor = [UIColor darkGrayColor];
+    self.titleLabel.font = self.titleFont;
+    self.titleLabel.textColor = self.titleTextColor;
     self.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
     self.titleLabel.numberOfLines = 0;
     self.titleLabel.text = self.currentTitle;
@@ -185,8 +271,8 @@ static ADFullScreenDetailView *sharedDetailView;
     CGRect textFrame = CGRectMake(10.0, [self titleLabelHeight], self.window.bounds.size.width-20.0, [self textLabelHeight]);
     
     self.textLabel = [[UILabel alloc] initWithFrame:textFrame];
-    self.textLabel.font = [UIFont fontWithName:@"Helvetica" size:15.0];
-    self.textLabel.textColor = [UIColor darkGrayColor];
+    self.textLabel.font = self.detailsFont;
+    self.textLabel.textColor = self.detailsTextColor;
     self.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
     self.textLabel.numberOfLines = 0;
     self.textLabel.backgroundColor = [UIColor clearColor];
