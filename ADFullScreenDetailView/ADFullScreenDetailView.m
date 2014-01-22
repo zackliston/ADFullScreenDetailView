@@ -221,6 +221,8 @@ static ADFullScreenDetailView *sharedDetailView;
 {
     self = [super init];
     if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
+        
         self.isActive = NO;
         self.hasNavigationButtons = YES;
         self.window = [[UIApplication sharedApplication] keyWindow];
@@ -232,8 +234,11 @@ static ADFullScreenDetailView *sharedDetailView;
 #pragma mark Setup
 - (void)setupRootView
 {
-    self.rootView = [[UIView alloc] initWithFrame:self.window.bounds];
+    self.rootView = [[UIView alloc] initWithFrame:self.window.rootViewController.view.bounds];
     self.rootView.backgroundColor = [UIColor clearColor];
+    
+    self.rootView.autoresizesSubviews = YES;
+    self.rootView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dimmedViewTapped:)];
     [self.rootView addGestureRecognizer:tap];
@@ -245,8 +250,10 @@ static ADFullScreenDetailView *sharedDetailView;
 {
     CGFloat height = [self titleLabelHeight]+[self textLabelHeight]+[self buttonViewHeight];
     
-    self.mainView = [[UIView alloc] initWithFrame:CGRectMake(0.0, -height, self.window.frame.size.width, height)];
+    self.mainView = [[UIView alloc] initWithFrame:CGRectMake(0.0, -height, self.window.rootViewController.view.bounds.size.width, height)];
     self.mainView.backgroundColor = self.backgroundColor;
+    
+    self.mainView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
     [self setupTitleView];
     [self setupTextView];
@@ -257,6 +264,7 @@ static ADFullScreenDetailView *sharedDetailView;
 - (void)setupTitleView
 {
     self.titleView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.mainView.bounds.size.width, [self titleLabelHeight])];
+    self.titleView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.titleView.backgroundColor = [UIColor clearColor];
     
     if (!self.titleBorderLayer) {
@@ -271,6 +279,7 @@ static ADFullScreenDetailView *sharedDetailView;
     titleFrame.size.width -= 55.0;
     
     self.titleLabel = [[UILabel alloc] initWithFrame:titleFrame];
+    self.titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.titleLabel.backgroundColor = [UIColor clearColor];
     self.titleLabel.font = self.titleFont;
     self.titleLabel.textColor = self.titleTextColor;
@@ -295,9 +304,10 @@ static ADFullScreenDetailView *sharedDetailView;
 
 - (void)setupTextView
 {
-    CGRect textFrame = CGRectMake(10.0, [self titleLabelHeight], self.window.bounds.size.width-20.0, [self textLabelHeight]);
+    CGRect textFrame = CGRectMake(10.0, [self titleLabelHeight], self.window.rootViewController.view.bounds.size.width-20.0, [self textLabelHeight]);
     
     self.detailsView = [[UITextView alloc] initWithFrame:textFrame];
+    self.detailsView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.detailsView.font = self.detailsFont;
     self.detailsView.textColor = self.detailsTextColor;
     self.detailsView.backgroundColor = [UIColor clearColor];
@@ -312,9 +322,10 @@ static ADFullScreenDetailView *sharedDetailView;
 
 - (void)setupButtonView
 {
-    CGRect buttonViewFrame = CGRectMake(0.0, [self titleLabelHeight]+[self textLabelHeight], self.window.bounds.size.width, 44.0);
+    CGRect buttonViewFrame = CGRectMake(0.0, [self titleLabelHeight]+[self textLabelHeight], self.window.rootViewController.view.bounds.size.width, 44.0);
     
     self.buttonView = [[UIView alloc] initWithFrame:buttonViewFrame];
+    self.buttonView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.buttonView.backgroundColor = [UIColor clearColor];
     
     self.previousButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -340,7 +351,7 @@ static ADFullScreenDetailView *sharedDetailView;
     if (!self.textBorderLayer) {
         self.textBorderLayer = [CALayer layer];
     }
-    self.textBorderLayer.frame = CGRectMake(0.0f, 1.0f, self.window.bounds.size.width, 0.5f);
+    self.textBorderLayer.frame = CGRectMake(0.0f, 1.0f, self.window.rootViewController.view.bounds.size.width, 0.5f);
     self.textBorderLayer.backgroundColor = [UIColor grayColor].CGColor;
     [self.buttonView.layer addSublayer:self.textBorderLayer];
     
@@ -351,12 +362,13 @@ static ADFullScreenDetailView *sharedDetailView;
 {
     self.selectedIndex = index;
     [self layoutViews];
-    
+   
     if (!self.isActive) {
         self.isActive = YES;
-        [self.window addSubview:self.rootView];
+        
+        [self.window.rootViewController.view addSubview:self.rootView];
         CGRect mainViewFrame = self.mainView.frame;
-        mainViewFrame.origin.y = [UIApplication sharedApplication].statusBarFrame.size.height;
+        mainViewFrame.origin.y = 20;
         
         [UIView animateWithDuration:ANIMATION_TIME animations:^{
             self.rootView.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.5];
@@ -387,7 +399,7 @@ static ADFullScreenDetailView *sharedDetailView;
 
 - (CGFloat)titleLabelHeight
 {
-    CGSize maxSize = CGSizeMake(self.window.bounds.size.width-75.0, MAXFLOAT);
+    CGSize maxSize = CGSizeMake(self.window.rootViewController.view.bounds.size.width-75.0, MAXFLOAT);
     CGSize labelSize = [self.currentTitle sizeWithFont:[UIFont fontWithName:@"Helvetica" size:16.0] constrainedToSize:maxSize lineBreakMode:NSLineBreakByWordWrapping];
     
     return MAX(44.0, labelSize.height+20.0);
@@ -395,7 +407,7 @@ static ADFullScreenDetailView *sharedDetailView;
 
 - (CGFloat)textLabelHeight
 {
-    CGSize maxSize = CGSizeMake(self.window.bounds.size.width-20.0, MAXFLOAT);
+    CGSize maxSize = CGSizeMake(self.window.rootViewController.view.bounds.size.width-20.0, MAXFLOAT);
     CGSize labelSize = [self.currentText sizeWithFont:[UIFont fontWithName:@"Helvetica" size:15.0] constrainedToSize:maxSize lineBreakMode:NSLineBreakByWordWrapping];
     
     if (labelSize.height+20.0 > [self maxDetailsHeight]) {
@@ -412,7 +424,7 @@ static ADFullScreenDetailView *sharedDetailView;
 
 - (CGFloat)maxDetailsHeight
 {
-    CGFloat maxHeight = self.window.frame.size.height;
+    CGFloat maxHeight = self.window.rootViewController.view.bounds.size.height;
     maxHeight -= [self titleLabelHeight];
     maxHeight -= [self buttonViewHeight];
     maxHeight -= 20.0;
@@ -426,7 +438,8 @@ static ADFullScreenDetailView *sharedDetailView;
         self.titleLabel.text = self.currentTitle;
         self.detailsView.text = self.currentText;
         
-        
+        self.rootView.frame = self.window.rootViewController.view.bounds;
+
         CGFloat height = [self titleLabelHeight]+[self textLabelHeight];
         
         if (self.hasNavigationButtons) {
@@ -434,9 +447,10 @@ static ADFullScreenDetailView *sharedDetailView;
         }
         
         if (self.isActive) {
-            self.mainView.frame = CGRectMake(0.0, [UIApplication sharedApplication].statusBarFrame.size.height, self.window.frame.size.width, height);
+            self.mainView.frame = CGRectMake(0.0, 20.0, self.window.rootViewController.view.bounds.size.width, height);
+        
         } else {
-            self.mainView.frame = CGRectMake(0.0, -height, self.window.frame.size.width, height);
+            self.mainView.frame = CGRectMake(0.0, -height, self.window.rootViewController.view.bounds.size.width, height);
         }
         
         self.titleView.frame = CGRectMake(0.0, 0.0, self.mainView.bounds.size.width, [self titleLabelHeight]);
@@ -452,11 +466,17 @@ static ADFullScreenDetailView *sharedDetailView;
         }
         
         self.titleBorderLayer.frame = CGRectMake(0.0f, self.titleView.bounds.size.height-1.0, self.titleView.bounds.size.width, 0.5f);
-        self.detailsView.frame = CGRectMake(10.0, [self titleLabelHeight], self.window.bounds.size.width-20.0, [self textLabelHeight]);
+        self.detailsView.frame = CGRectMake(10.0, [self titleLabelHeight], self.window.rootViewController.view.bounds.size.width-20.0, [self textLabelHeight]);
         
-        self.textBorderLayer.frame = CGRectMake(0.0f, 1.0, self.window.bounds.size.width, 0.5f);
+        self.textBorderLayer.frame = CGRectMake(0.0f, 1.0, self.window.rootViewController.view.bounds.size.width, 0.5f);
         
-        self.buttonView.frame = CGRectMake(0.0, [self titleLabelHeight]+[self textLabelHeight], self.window.bounds.size.width, [self buttonViewHeight]);
+        self.buttonView.frame = CGRectMake(0.0, [self titleLabelHeight]+[self textLabelHeight], self.window.rootViewController.view.bounds.size.width, [self buttonViewHeight]);
+        
+        CGRect nextButtonFrame = CGRectMake(self.buttonView.bounds.size.width-45.0, 5.0, 40.0, 34.0);
+        self.nextButton.frame = nextButtonFrame;
+        CGRect backButtonFrame = CGRectMake(5.0, 5.0, 75.0, 34.0);
+        self.previousButton.frame = backButtonFrame;
+        
     } completion:^(BOOL finished) {
         if ([self textLabelHeight] == [self maxDetailsHeight]) {
             self.canScroll = YES;
@@ -496,5 +516,11 @@ static ADFullScreenDetailView *sharedDetailView;
         [self remove];
     }
 }
+
+- (void)deviceOrientationDidChange:(NSNotification *)notification
+{
+    [self layoutViews];
+}
+
 
 @end
