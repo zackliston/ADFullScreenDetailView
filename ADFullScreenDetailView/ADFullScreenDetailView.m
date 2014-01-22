@@ -13,6 +13,7 @@
 
 @interface ADFullScreenDetailView ()
 
+@property (nonatomic, weak) UIViewController *viewController;
 @property (nonatomic, weak) UIWindow *window;
 @property (nonatomic, strong) UIView *rootView;
 @property (nonatomic, strong) UIView *mainView;
@@ -358,15 +359,22 @@ static ADFullScreenDetailView *sharedDetailView;
     [self.mainView addSubview:self.buttonView];
 }
 
-- (void)showIndex:(NSUInteger)index
+- (void)showIndex:(NSUInteger)index inViewController:(UIViewController *)viewController
 {
+    self.viewController = viewController;
     self.selectedIndex = index;
     [self layoutViews];
    
     if (!self.isActive) {
+        
         self.isActive = YES;
         
-        [self.window.rootViewController.view addSubview:self.rootView];
+        if (self.owningViewControllerIsPresentedModally) {
+            [self.viewController.view addSubview:self.rootView];
+        } else {
+            [self.window.rootViewController.view addSubview:self.rootView];
+        }
+
         CGRect mainViewFrame = self.mainView.frame;
         mainViewFrame.origin.y = 20;
         

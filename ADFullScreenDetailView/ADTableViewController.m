@@ -70,7 +70,7 @@
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
 {
-    [self.detailView showIndex:indexPath.row];
+    [self.detailView showIndex:indexPath.row inViewController:self];
 }
 
 #pragma mark Helpers

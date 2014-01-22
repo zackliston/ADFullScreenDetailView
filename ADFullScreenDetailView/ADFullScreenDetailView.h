@@ -20,9 +20,10 @@
 @property (nonatomic, strong) UIColor *titleTextColor;
 @property (nonatomic, strong) UIColor *detailsTextColor;
 @property (nonatomic, assign) BOOL hasNavigationButtons;
+@property (nonatomic, assign) BOOL owningViewControllerIsPresentedModally;
 
 + (ADFullScreenDetailView *)sharedInstance;
-- (void)showIndex:(NSUInteger)index;
+- (void)showIndex:(NSUInteger)index inViewController:(UIViewController *)viewController;
 - (void)remove;
 
 @end
