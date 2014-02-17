@@ -179,20 +179,25 @@ static ADFullScreenDetailView *sharedDetailView;
     if (_selectedIndex != selectedIndex || selectedIndex == 0) {
         _selectedIndex = selectedIndex;
         
-        if ([self.info count] > 0 && _selectedIndex < [self.info count]) {
-            id object = [self.info objectAtIndex:_selectedIndex];
-            if ([object isKindOfClass:[NSDictionary class]]) {
-                NSDictionary *dictionary = (NSDictionary *)object;
-                if ([dictionary objectForKey:AD_TITLE_KEY]) {
-                    self.currentTitle = [dictionary objectForKey:AD_TITLE_KEY];
-                }
-                if ([dictionary objectForKey:AD_DETAILS_KEY]) {
-                    self.currentText = [dictionary objectForKey:AD_DETAILS_KEY];
+        if (_selectedIndex != NSNotFound) {
+            if ([self.info count] > 0 && _selectedIndex < [self.info count]) {
+                id object = [self.info objectAtIndex:_selectedIndex];
+                if ([object isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *dictionary = (NSDictionary *)object;
+                    if ([dictionary objectForKey:AD_TITLE_KEY]) {
+                        self.currentTitle = [dictionary objectForKey:AD_TITLE_KEY];
+                    }
+                    if ([dictionary objectForKey:AD_DETAILS_KEY]) {
+                        self.currentText = [dictionary objectForKey:AD_DETAILS_KEY];
+                    }
                 }
             }
+            self.previousButton.enabled = (_selectedIndex > 0) ? YES : NO;
+            self.nextButton.enabled = (_selectedIndex < self.info.count-1) ? YES : NO;
+        } else {
+            self.previousButton.enabled = NO;
+            self.nextButton.enabled = NO;
         }
-        self.previousButton.enabled = (_selectedIndex > 0) ? YES : NO;
-        self.nextButton.enabled = (_selectedIndex < self.info.count-1) ? YES : NO;
     }
 }
 
@@ -364,28 +369,17 @@ static ADFullScreenDetailView *sharedDetailView;
     self.viewController = viewController;
     self.selectedIndex = index;
     [self layoutViews];
-   
-    if (!self.isActive) {
-        
-        self.isActive = YES;
-        
-        if (self.owningViewControllerIsPresentedModally) {
-            [self.viewController.view addSubview:self.rootView];
-        } else {
-            [self.window.rootViewController.view addSubview:self.rootView];
-        }
+    [self present];
+}
 
-        CGRect mainViewFrame = self.mainView.frame;
-        mainViewFrame.origin.y = 20;
-        
-        [UIView animateWithDuration:ANIMATION_TIME animations:^{
-            self.rootView.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.5];
-            self.mainView.frame = mainViewFrame;
-            
-        } completion:^(BOOL finished) {
-            
-        }];
-    }
+- (void)showTitle:(NSString *)title details:(NSString *)details inViewController:(UIViewController *)viewController
+{
+    self.viewController = viewController;
+    self.selectedIndex = NSNotFound;
+    self.currentTitle = title;
+    self.currentText = details;
+    [self layoutViews];
+    [self present];
 }
 
 - (void)remove
@@ -405,6 +399,31 @@ static ADFullScreenDetailView *sharedDetailView;
 
 #pragma mark Helpers
 
+- (void)present
+{
+    if (!self.isActive) {
+        
+        self.isActive = YES;
+        
+        if (self.owningViewControllerIsPresentedModally) {
+            [self.viewController.view addSubview:self.rootView];
+        } else {
+            [self.window.rootViewController.view addSubview:self.rootView];
+        }
+        
+        CGRect mainViewFrame = self.mainView.frame;
+        mainViewFrame.origin.y = 20;
+        
+        [UIView animateWithDuration:ANIMATION_TIME animations:^{
+            self.rootView.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.5];
+            self.mainView.frame = mainViewFrame;
+            
+        } completion:^(BOOL finished) {
+            
+        }];
+    }
+}
+
 - (CGFloat)titleLabelHeight
 {
     CGSize maxSize = CGSizeMake(self.window.rootViewController.view.bounds.size.width-75.0, MAXFLOAT);
@@ -415,8 +434,8 @@ static ADFullScreenDetailView *sharedDetailView;
 
 - (CGFloat)textLabelHeight
 {
-    CGSize maxSize = CGSizeMake(self.window.rootViewController.view.bounds.size.width-20.0, MAXFLOAT);
-    CGSize labelSize = [self.currentText sizeWithFont:[UIFont fontWithName:@"Helvetica" size:15.0] constrainedToSize:maxSize lineBreakMode:NSLineBreakByWordWrapping];
+    CGSize maxSize = CGSizeMake(self.window.rootViewController.view.bounds.size.width-30.0, MAXFLOAT);
+    CGSize labelSize = [self.currentText sizeWithFont:self.detailsFont constrainedToSize:maxSize lineBreakMode:NSLineBreakByWordWrapping];
     
     if (labelSize.height+20.0 > [self maxDetailsHeight]) {
         return [self maxDetailsHeight];

@@ -24,6 +24,7 @@
 
 + (ADFullScreenDetailView *)sharedInstance;
 - (void)showIndex:(NSUInteger)index inViewController:(UIViewController *)viewController;
+- (void)showTitle:(NSString *)title details:(NSString *)details inViewController:(UIViewController *)viewController;
 - (void)remove;
 
 @end
