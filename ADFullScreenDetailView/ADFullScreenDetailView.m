@@ -279,13 +279,13 @@ static ADFullScreenDetailView *sharedDetailView;
     self.titleBorderLayer.frame = CGRectMake(0.0f, self.titleView.bounds.size.height-1.0, self.titleView.bounds.size.width, 0.5f);
     self.titleBorderLayer.backgroundColor = [UIColor grayColor].CGColor;
     [self.titleView.layer addSublayer:self.titleBorderLayer];
-
+    
     
     CGRect titleFrame = CGRectInset(self.titleView.bounds, 10.0, 10.0);
     titleFrame.size.width -= 55.0;
     
     self.titleLabel = [[UILabel alloc] initWithFrame:titleFrame];
-    self.titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
     self.titleLabel.backgroundColor = [UIColor clearColor];
     self.titleLabel.font = self.titleFont;
     self.titleLabel.textColor = self.titleTextColor;
@@ -293,17 +293,19 @@ static ADFullScreenDetailView *sharedDetailView;
     self.titleLabel.numberOfLines = 0;
     self.titleLabel.text = self.currentTitle;
     
-    CGRect buttonFrame = CGRectMake(self.titleView.frame.size.width-50.0, self.titleView.frame.size.height/2.0-20.0, 40.0, 40.0);
+    CGRect buttonFrame = CGRectMake(self.titleView.frame.size.width-50.0, self.titleView.frame.size.height/2.0-20.0, 44.0, 40.0);
     
     UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    closeButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
     [closeButton addTarget:self action:@selector(closeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     closeButton.frame = buttonFrame;
     closeButton.tag = 9;
+    //[closeButton.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:17.0]];
     closeButton.titleLabel.font = [UIFont systemFontOfSize:17.0];
     [closeButton setTitle:@"Close" forState:UIControlStateNormal];
-
+    closeButton.titleLabel.lineBreakMode = NSLineBreakByClipping;
     [closeButton setTintColor:[UIColor colorWithRed:0.0 green:190.0/255.0 blue:236.0/255.0 alpha:1.0]];
-;
+    ;
     
     [self.titleView addSubview:self.titleLabel];
     [self.titleView addSubview:closeButton];
@@ -319,7 +321,15 @@ static ADFullScreenDetailView *sharedDetailView;
     self.detailsView.font = self.detailsFont;
     self.detailsView.textColor = self.detailsTextColor;
     self.detailsView.backgroundColor = [UIColor clearColor];
-    self.detailsView.text = self.currentText;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSMutableAttributedString *detail =  [[NSMutableAttributedString alloc] initWithData:[self.currentText dataUsingEncoding:NSUTF8StringEncoding]
+                                                                                     options:@{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
+                                                                                               NSCharacterEncodingDocumentAttribute: [NSNumber numberWithInt:NSUTF8StringEncoding]} documentAttributes:nil error:nil];
+        [detail addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue" size:17.0] range:NSMakeRange(0, detail.length)];
+        self.detailsView.attributedText = detail;
+        
+    });
+    
     self.detailsView.editable = NO;
     self.detailsView.showsVerticalScrollIndicator = NO;
     self.detailsView.showsHorizontalScrollIndicator = NO;
@@ -437,13 +447,13 @@ static ADFullScreenDetailView *sharedDetailView;
 - (CGFloat)textLabelHeight
 {
     CGSize maxSize = CGSizeMake(self.window.rootViewController.view.bounds.size.width-30.0, MAXFLOAT);
-    CGSize labelSize = [self.currentText sizeWithFont:self.detailsFont constrainedToSize:maxSize lineBreakMode:NSLineBreakByWordWrapping];
+    CGSize labelSize = [self.detailsView.attributedText boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin context:nil].size;
     
-    if (labelSize.height+30.0 > [self maxDetailsHeight]) {
+    if (labelSize.height+20.0 > [self maxDetailsHeight]) {
         return [self maxDetailsHeight];
     }
     
-    return labelSize.height + 30.0;
+    return labelSize.height + 20.0;
 }
 
 - (CGFloat)buttonViewHeight
@@ -463,58 +473,68 @@ static ADFullScreenDetailView *sharedDetailView;
 
 - (void)layoutViews
 {
-    [UIView animateWithDuration:ANIMATION_TIME animations:^{
-        self.titleLabel.text = self.currentTitle;
-        self.detailsView.text = self.currentText;
+    
+    self.titleLabel.text = self.currentTitle;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSMutableAttributedString *detail =  [[NSMutableAttributedString alloc] initWithData:[self.currentText dataUsingEncoding:NSUTF8StringEncoding]
+                                                                                     options:@{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
+                                                                                               NSCharacterEncodingDocumentAttribute: [NSNumber numberWithInt:NSUTF8StringEncoding]} documentAttributes:nil error:nil];
+        [detail addAttribute:NSFontAttributeName value:self.detailsFont range:NSMakeRange(0, detail.length)];
+        self.detailsView.attributedText = detail;
         
-        self.rootView.frame = self.window.rootViewController.view.bounds;
-
-        CGFloat height = [self titleLabelHeight]+[self textLabelHeight];
-        
-        if (self.hasNavigationButtons) {
-            height += [self buttonViewHeight];
-        }
-        
-        if (self.isActive) {
-            self.mainView.frame = CGRectMake(0.0, 20.0, self.window.rootViewController.view.bounds.size.width, height);
-        
-        } else {
-            self.mainView.frame = CGRectMake(0.0, -height, self.window.rootViewController.view.bounds.size.width, height);
-        }
-        
-        self.titleView.frame = CGRectMake(0.0, 0.0, self.mainView.bounds.size.width, [self titleLabelHeight]);
-        
-        CGRect titleFrame = CGRectInset(self.titleView.bounds, 10.0, 10.0);
-        titleFrame.size.width -= 55.0;
-        self.titleLabel.frame = titleFrame;
-        
-        for (UIView *subView in self.titleView.subviews) {
-            if (subView.tag == 9) {
-                subView.frame = CGRectMake(self.titleView.frame.size.width-50.0, self.titleView.frame.size.height/2.0-20.0, 44.0, 40.0);
+        [UIView animateWithDuration:ANIMATION_TIME animations:^{
+            
+            self.rootView.frame = self.window.rootViewController.view.bounds;
+            
+            CGFloat height = [self titleLabelHeight]+[self textLabelHeight];
+            
+            if (self.hasNavigationButtons) {
+                height += [self buttonViewHeight];
             }
-        }
+            
+            if (self.isActive) {
+                self.mainView.frame = CGRectMake(0.0, 20.0, self.window.rootViewController.view.bounds.size.width, height);
+                
+            } else {
+                self.mainView.frame = CGRectMake(0.0, -height, self.window.rootViewController.view.bounds.size.width, height);
+            }
+            
+            self.titleView.frame = CGRectMake(0.0, 0.0, self.mainView.bounds.size.width, [self titleLabelHeight]);
+            
+            CGRect titleFrame = CGRectInset(self.titleView.bounds, 10.0, 10.0);
+            titleFrame.size.width -= 55.0;
+            self.titleLabel.frame = titleFrame;
+            
+            for (UIView *subView in self.titleView.subviews) {
+                if (subView.tag == 9) {
+                    subView.frame = CGRectMake(self.titleView.frame.size.width-50.0, self.titleView.frame.size.height/2.0-20.0, 44.0, 40.0);
+                }
+            }
+            
+            self.titleBorderLayer.frame = CGRectMake(0.0f, self.titleView.bounds.size.height-1.0, self.titleView.bounds.size.width, 0.5f);
+            self.detailsView.frame = CGRectMake(10.0, [self titleLabelHeight], self.window.rootViewController.view.bounds.size.width-20.0, [self textLabelHeight]);
+            
+            self.textBorderLayer.frame = CGRectMake(0.0f, 1.0, self.window.rootViewController.view.bounds.size.width, 0.5f);
+            
+            self.buttonView.frame = CGRectMake(0.0, [self titleLabelHeight]+[self textLabelHeight], self.window.rootViewController.view.bounds.size.width, [self buttonViewHeight]);
+            
+            CGRect nextButtonFrame = CGRectMake(self.buttonView.bounds.size.width-45.0, 5.0, 40.0, 34.0);
+            self.nextButton.frame = nextButtonFrame;
+            CGRect backButtonFrame = CGRectMake(5.0, 5.0, 75.0, 34.0);
+            self.previousButton.frame = backButtonFrame;
+            
+        } completion:^(BOOL finished) {
+            if ([self textLabelHeight] == [self maxDetailsHeight]) {
+                self.canScroll = YES;
+            } else {
+                self.canScroll = NO;
+            }
+            
+            self.buttonView.hidden = !self.hasNavigationButtons;
+        }];
         
-        self.titleBorderLayer.frame = CGRectMake(0.0f, self.titleView.bounds.size.height-1.0, self.titleView.bounds.size.width, 0.5f);
-        self.detailsView.frame = CGRectMake(10.0, [self titleLabelHeight], self.window.rootViewController.view.bounds.size.width-20.0, [self textLabelHeight]);
-        
-        self.textBorderLayer.frame = CGRectMake(0.0f, 1.0, self.window.rootViewController.view.bounds.size.width, 0.5f);
-        
-        self.buttonView.frame = CGRectMake(0.0, [self titleLabelHeight]+[self textLabelHeight], self.window.rootViewController.view.bounds.size.width, [self buttonViewHeight]);
-        
-        CGRect nextButtonFrame = CGRectMake(self.buttonView.bounds.size.width-45.0, 5.0, 40.0, 34.0);
-        self.nextButton.frame = nextButtonFrame;
-        CGRect backButtonFrame = CGRectMake(5.0, 5.0, 75.0, 34.0);
-        self.previousButton.frame = backButtonFrame;
-        
-    } completion:^(BOOL finished) {
-        if ([self textLabelHeight] == [self maxDetailsHeight]) {
-            self.canScroll = YES;
-        } else {
-            self.canScroll = NO;
-        }
-        
-        self.buttonView.hidden = !self.hasNavigationButtons;
-    }];
+    });
+    
 }
 
 #pragma mark Button Responders
