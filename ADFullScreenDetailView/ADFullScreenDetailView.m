@@ -299,7 +299,9 @@ static ADFullScreenDetailView *sharedDetailView;
     [closeButton addTarget:self action:@selector(closeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     closeButton.frame = buttonFrame;
     closeButton.tag = 9;
+    closeButton.titleLabel.font = [UIFont systemFontOfSize:17.0];
     [closeButton setTitle:@"Close" forState:UIControlStateNormal];
+
     [closeButton setTintColor:[UIColor colorWithRed:0.0 green:190.0/255.0 blue:236.0/255.0 alpha:1.0]];
 ;
     
@@ -437,11 +439,11 @@ static ADFullScreenDetailView *sharedDetailView;
     CGSize maxSize = CGSizeMake(self.window.rootViewController.view.bounds.size.width-30.0, MAXFLOAT);
     CGSize labelSize = [self.currentText sizeWithFont:self.detailsFont constrainedToSize:maxSize lineBreakMode:NSLineBreakByWordWrapping];
     
-    if (labelSize.height+20.0 > [self maxDetailsHeight]) {
+    if (labelSize.height+30.0 > [self maxDetailsHeight]) {
         return [self maxDetailsHeight];
     }
     
-    return labelSize.height + 20.0;
+    return labelSize.height + 30.0;
 }
 
 - (CGFloat)buttonViewHeight
@@ -488,7 +490,7 @@ static ADFullScreenDetailView *sharedDetailView;
         
         for (UIView *subView in self.titleView.subviews) {
             if (subView.tag == 9) {
-                subView.frame = CGRectMake(self.titleView.frame.size.width-50.0, self.titleView.frame.size.height/2.0-20.0, 40.0, 40.0);
+                subView.frame = CGRectMake(self.titleView.frame.size.width-50.0, self.titleView.frame.size.height/2.0-20.0, 44.0, 40.0);
             }
         }
         
